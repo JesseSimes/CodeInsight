@@ -190,10 +190,10 @@ The project is being developed in four major stages.
 * [x] User registration API
 * [x] Password hashing
 * [x] Login API
-* [ ] JWT authentication
-* [ ] Protected routes
-* [ ] React authentication UI
-* [ ] User dashboard
+* [x] JWT authentication
+* [x] Protected routes
+* [x] React authentication UI
+* [x] User dashboard
 * [ ] Coding platform data import
 
 ### Stage 2 — Coding Analytics Engine
