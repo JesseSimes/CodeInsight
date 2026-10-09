@@ -1,0 +1,508 @@
+.landing {
+  overflow-x: clip;
+  background: var(--bg);
+}
+
+.l-shell {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.l-index {
+  color: var(--text-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-mono);
+  font-feature-settings: 'tnum' 1;
+  transition: color var(--t-fast) var(--ease);
+}
+
+/* ---------- Nav ---------- */
+.l-nav-wrap {
+  position: relative;
+  z-index: var(--z-nav);
+  border-bottom: 1px solid var(--border);
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+}
+
+.l-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--s-8);
+  height: 68px;
+}
+
+.l-nav-links {
+  display: flex;
+  gap: var(--s-6);
+  margin-right: auto;
+  margin-left: var(--s-6);
+}
+
+.l-nav-links a,
+.l-login {
+  position: relative;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+
+/* Underline that grows from the left on hover */
+.l-nav-links a::after,
+.l-login::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-base) var(--ease-out-expo);
+}
+
+.l-nav-links a:hover,
+.l-login:hover {
+  color: var(--text);
+}
+
+.l-nav-links a:hover::after,
+.l-login:hover::after {
+  transform: scaleX(1);
+}
+
+.l-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+/* ---------- Hero ---------- */
+.l-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-height: min(100dvh, 920px);
+}
+
+.l-hero-bg {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Fine measurement grid, faded toward the edges so the headline stays clean. */
+.l-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center -1px;
+  mask-image: radial-gradient(ellipse 70% 62% at 50% 38%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 38%, #000 20%, transparent 78%);
+}
+
+/* Live particle field (WebGPU). Fades in once it has drawn its first frame.
+   The mask fades it toward the edges and thins it behind the headline so the
+   type always reads first. */
+.l-field {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease);
+  /* closest-side: the fade reaches zero exactly at the hero's edges, so the
+     corners are fully clear (the old fixed 80%/76% ellipse overshot them). */
+  mask-image: radial-gradient(ellipse closest-side at 50% 46%, rgba(0, 0, 0, 0.32) 0%, #000 42%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse closest-side at 50% 46%, rgba(0, 0, 0, 0.32) 0%, #000 42%, transparent 100%);
+}
+
+.l-field-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.is-live .l-field {
+  opacity: var(--field-opacity);
+}
+
+/* Bottom blend: melts the field into the page background so it never ends
+   in a hard line where the hero meets the next section. Drawn last, on top
+   of the field, and themed through --bg. */
+.l-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  background: linear-gradient(to bottom, transparent, var(--bg) 92%);
+  pointer-events: none;
+}
+
+/* The static grid is the fallback; it steps back once the field is live. */
+.l-grid {
+  transition: opacity 1.4s var(--ease);
+}
+
+.is-live .l-grid {
+  opacity: 0;
+}
+
+/* Soft accent light from above, tuned per theme through --glow tokens. */
+.l-glow {
+  position: absolute;
+  left: 50%;
+  top: -32%;
+  width: min(1100px, 140vw);
+  aspect-ratio: 1.6;
+  translate: -50% 0;
+  background:
+    radial-gradient(closest-side, var(--glow), transparent 72%),
+    radial-gradient(closest-side at 70% 60%, var(--glow-2), transparent 70%);
+  filter: blur(8px);
+}
+
+.l-hero-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--s-16) 0 var(--s-24);
+}
+
+.l-title {
+  margin-top: 0;
+  max-width: 12ch;
+  font-size: var(--fs-display-lg);
+}
+
+/* Each line is a mask for the line-by-line reveal. The padding keeps
+   italic descenders (the p in "pattern") from being clipped. */
+.l-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.l-line-inner {
+  display: inline-block;
+}
+
+.l-title em {
+  color: var(--accent-text);
+  padding-right: 0.04em;
+}
+
+.l-sub {
+  margin-top: var(--s-6);
+  max-width: 46ch;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  line-height: 1.65;
+  text-wrap: balance;
+}
+
+.l-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-3);
+  margin-top: var(--s-8);
+}
+
+.l-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1px;
+  height: 64px;
+  background: linear-gradient(var(--border-strong), transparent);
+}
+
+/* ---------- Sections ---------- */
+.l-section {
+  padding: var(--s-24) 0;
+}
+
+.l-section-head {
+  max-width: 640px;
+}
+
+.l-h2 {
+  max-width: 22ch;
+  font-size: var(--fs-display-md);
+  text-wrap: balance;
+}
+
+.l-lede {
+  margin-top: var(--s-4);
+  max-width: 56ch;
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+}
+
+.l-questions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--s-12);
+  margin: var(--s-12) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.l-questions li {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  padding: var(--s-5) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.l-questions .l-index {
+  padding-top: 4px;
+}
+
+@media (hover: hover) {
+  .l-questions li:hover .l-index {
+    color: var(--accent-text);
+  }
+}
+
+.l-band {
+  border-block: 1px solid var(--border);
+  background: var(--bg-sunken);
+}
+
+.l-steps {
+  position: relative;
+  margin-top: var(--s-12);
+  padding-top: var(--s-8);
+}
+
+.l-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.l-rail-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent-text), var(--accent-line) 70%, transparent);
+}
+
+.l-steps-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.l-steps-list li {
+  position: relative;
+}
+
+.l-step-dot {
+  position: absolute;
+  top: calc(var(--s-8) * -1 - 4px);
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--accent-text);
+  border-radius: 50%;
+  background: var(--bg-sunken);
+  transition: background-color var(--t-fast) var(--ease);
+}
+
+.l-steps-list li:hover .l-step-dot {
+  background: var(--accent-text);
+}
+
+.l-steps-list .l-index {
+  color: var(--accent-text);
+}
+
+.l-steps-list h3 {
+  margin-top: var(--s-3);
+  font-size: var(--fs-lg);
+}
+
+.l-steps-list p {
+  margin-top: var(--s-2);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.l-status-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: var(--s-12);
+  align-items: start;
+}
+
+.l-status {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+.l-status li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6);
+  border-top: 1px solid var(--border);
+  font-weight: 500;
+  transition: background-color var(--t-fast) var(--ease);
+}
+
+.l-status li:first-child {
+  border-top: 0;
+}
+
+.l-status li:hover {
+  background: var(--surface-hover);
+}
+
+.l-cta {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s-6);
+  margin-bottom: var(--s-16);
+  padding: var(--s-12);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-md);
+  background:
+    radial-gradient(ellipse 60% 120% at 0% 0%, var(--glow), transparent 70%),
+    var(--surface);
+  box-shadow: var(--shadow-panel);
+}
+
+.l-cta h2 {
+  font-size: var(--fs-display-md);
+}
+
+.l-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  padding: var(--s-8) 0 var(--s-10);
+  border-top: 1px solid var(--border);
+  color: var(--text-subtle);
+  font-size: var(--fs-sm);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .l-steps-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--s-12);
+  }
+
+  .l-rail,
+  .l-step-dot {
+    display: none;
+  }
+
+  .l-steps {
+    padding-top: 0;
+  }
+
+  .l-status-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .l-shell {
+    width: calc(100% - 32px);
+  }
+
+  .l-nav {
+    gap: var(--s-3);
+  }
+
+  .l-nav-links {
+    display: none;
+  }
+
+  .l-nav-actions {
+    margin-left: auto;
+    gap: var(--s-2);
+  }
+
+  .l-hero {
+    min-height: auto;
+  }
+
+  .l-hero-inner {
+    padding: var(--s-16) 0 var(--s-24);
+  }
+
+  .l-glow {
+    top: -18%;
+    width: 170vw;
+    filter: none;
+  }
+
+  .l-ctas {
+    flex-direction: column;
+    align-self: stretch;
+    width: 100%;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+
+  .l-ctas .btn {
+    width: 100%;
+  }
+
+  .l-section {
+    padding: var(--s-16) 0;
+  }
+
+  .l-questions {
+    grid-template-columns: 1fr;
+  }
+
+  .l-steps-list {
+    grid-template-columns: 1fr;
+    row-gap: var(--s-8);
+  }
+
+  .l-cta {
+    padding: var(--s-8) var(--s-6);
+  }
+}

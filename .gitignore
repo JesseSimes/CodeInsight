@@ -3,3 +3,6 @@ node_modules/
 dist/
 build/
 .vite/
+
+# Private notes with platform API keys
+API_KEYS.md

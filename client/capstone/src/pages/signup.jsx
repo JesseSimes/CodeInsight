@@ -1,50 +1,105 @@
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import Link from '../components/Link'
+import Alert from '../components/ui/Alert'
+import Button from '../components/ui/Button'
+import { PasswordField, TextField } from '../components/ui/Field'
+import AuthLayout from '../layouts/AuthLayout'
+import { useAuth } from '../lib/auth'
+import { EMAIL_PATTERN } from '../lib/format'
+import { useRouter } from '../lib/router'
 
-const Signup = ({ setPage }) => {
+const MIN_PASSWORD = 8
 
-  // const {register, handleSubmit} = useForm()
+export default function Signup() {
+  const { register: registerAccount } = useAuth()
+  const { navigate } = useRouter()
 
-  // const submitHandler = async (data) => {
-  //   const formData = new FormData()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ defaultValues: { name: '', email: '', password: '' } })
 
-  //   formData.append("name". data.name)
-  //   formData.append("email". email.name)
-  //   formData.append("password". password.name)
-
-  //   console.log(formData)
-  // }
-
-  const {register, handleSubmit} = useForm()
-
-  const submitHandler = async (data) => {
+  const submitHandler = async ({ name, email, password }) => {
     try {
-      const response = await fetch ('http://localhost:3000/api/auth/register',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Registration failed');
-      }
-
-      console.log('Registration successful:', result);
-      setPage('login');
-          }
-           catch (error) {
-      console.log("Signup error", error)
-      alert(error.message)
+      const trimmedEmail = email.trim()
+      await registerAccount({ name: name.trim(), email: trimmedEmail, password })
+      navigate('/login', { state: { notice: 'registered', email: trimmedEmail } })
+    } catch (error) {
+      const message = error.message === 'User exists'
+        ? 'An account with this email already exists. Log in instead, or use a different email.'
+        : error.message || 'Registration failed'
+      setError('root.server', { message })
     }
-  };
+  }
 
   return (
-    <main className="auth-page"><button className="auth-logo" onClick={() => setPage('home')}>&lt;/&gt; Code<span>Insight</span></button><div className="auth-card"><section className="auth-intro"><label>START YOUR JOURNEY</label><h1>Make every practice session count.</h1><p>Connect your platforms, find your blind spots, and prepare for interviews with a clearer plan.</p><ul><li>✓ Personalized practice focus</li><li>✓ Progress that makes sense</li><li>✓ Built for coding interviews</li></ul></section><section className="form-panel"><h2>Create your account</h2><p>Already have an account? <button onClick={() => setPage('login')}>Log in</button></p><form onSubmit={handleSubmit(submitHandler)}><label>Full name<input {...register ('name', {required: true})} type="text" placeholder="Your name"/></label><label>Email address<input {...register ('email', {required: true})} type="email" placeholder="you@example.com"/></label><label>Password<input {...register ('password', {required: true})} type="password" placeholder="Create a password"/></label><button className="button primary submit" type="submit">Create account <span className="arrow">→</span></button></form><small className="terms">By creating an account, you agree to our Terms of Service and Privacy Policy.</small></section></div></main>
+    <AuthLayout
+      aside={
+        <>
+          <h1 className="auth-headline">Make every practice session count.</h1>
+          <p className="auth-lede">Bring your solved problems into one view and see which topics need another pass.</p>
+          <ul className="auth-points" role="list">
+            <li><span className="mono">01</span>Create your account</li>
+            <li><span className="mono">02</span>Connect the platforms you practice on</li>
+            <li><span className="mono">03</span>Review your patterns and plan what is next</li>
+          </ul>
+        </>
+      }
+    >
+      <div className="auth-form-head">
+        <h2>Create your account</h2>
+        <p>
+          Already have an account? <Link to="/login" className="text-link">Log in</Link>
+        </p>
+      </div>
+
+      {errors.root?.server && (
+        <Alert tone="error" title="Could not create your account" live>{errors.root.server.message}</Alert>
+      )}
+
+      <form className="auth-form" onSubmit={handleSubmit(submitHandler)} noValidate>
+        <TextField
+          label="Full name"
+          autoComplete="name"
+          placeholder="Your name"
+          error={errors.name?.message}
+          {...register('name', {
+            required: 'Enter your name.',
+            validate: (value) => value.trim().length > 0 || 'Enter your name.',
+          })}
+        />
+        <TextField
+          label="Email address"
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          placeholder="you@example.com"
+          error={errors.email?.message}
+          {...register('email', {
+            required: 'Enter your email address.',
+            pattern: { value: EMAIL_PATTERN, message: 'Enter a valid email address, like name@example.com.' },
+          })}
+        />
+        <PasswordField
+          label="Password"
+          autoComplete="new-password"
+          placeholder="Create a password"
+          hint={`Use at least ${MIN_PASSWORD} characters.`}
+          error={errors.password?.message}
+          {...register('password', {
+            required: 'Create a password.',
+            minLength: { value: MIN_PASSWORD, message: `Use at least ${MIN_PASSWORD} characters.` },
+          })}
+        />
+
+        <Button type="submit" size="lg" block loading={isSubmitting} loadingLabel="Creating account" arrow>
+          Create account
+        </Button>
+      </form>
+
+      <p className="auth-terms">By creating an account, you agree to our Terms of Service and Privacy Policy.</p>
+    </AuthLayout>
   )
 }
-
-export default Signup

@@ -1,0 +1,184 @@
+/*
+ * CodeInsight design tokens.
+ *
+ * Two intentionally designed themes share one token vocabulary:
+ *   - dark (default): cool graphite surfaces, cobalt accent
+ *   - light: ivory paper surfaces, charcoal type, deep cobalt accent
+ *
+ * The active theme is set on <html data-theme="..."> by the boot script in
+ * index.html before first paint. Components only ever read these variables.
+ *
+ * Accent roles:
+ *   --accent        fill for primary actions and selected state
+ *   --accent-text   accent used as text / thin strokes (must pass contrast)
+ *
+ * Fonts are loaded from index.html with display=swap.
+ */
+
+:root {
+  /* ---------- Type ---------- */
+  --font-display: 'DM Serif Display', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+
+  --fs-xs: 0.75rem;     /* 12 */
+  --fs-sm: 0.8125rem;   /* 13 */
+  --fs-base: 0.9375rem; /* 15 */
+  --fs-md: 1.0625rem;   /* 17 */
+  --fs-lg: 1.375rem;    /* 22 */
+  --fs-xl: 1.75rem;     /* 28 */
+  --fs-2xl: 2.25rem;    /* 36 */
+  --fs-display-sm: clamp(2rem, 3.4vw, 2.75rem);
+  --fs-display-md: clamp(2.25rem, 4.2vw, 3.25rem);
+  --fs-display-lg: clamp(2.875rem, 7.4vw, 6rem);
+  --lh-display: 1.04;
+  --lh-tight: 1.15;
+  --lh-body: 1.6;
+  --tracking-display: -0.015em;
+  --tracking-mono: 0.02em;
+
+  /* ---------- Space (4px grid) ---------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-24: 96px;
+  --s-32: 128px;
+
+  /* ---------- Shape: controls 6px, panels 10px. No pills. ---------- */
+  --r-sm: 6px;
+  --r-md: 10px;
+
+  /* ---------- Motion ---------- */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 140ms;
+  --t-base: 220ms;
+  --t-theme: 280ms;
+
+  /* ---------- Layout ---------- */
+  --sidebar-w: 248px;
+  --content-max: 1120px;
+  --topbar-h: 60px;
+
+  /* ---------- Layers (the only z-index values in use) ---------- */
+  --z-nav: 10;
+  --z-drawer: 40;
+  --z-topbar: 50;
+  --z-skip: 100;
+}
+
+/* ===================== Dark theme (default) ===================== */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Cool graphite surfaces, blue-leaning so they sit with the cobalt accent */
+  --bg: #0b0e12;
+  --bg-sunken: #080a0d;
+  --surface: #10141a;
+  --surface-raised: #141922;
+  --surface-hover: #19202a;
+  --input-bg: #080a0d;
+
+  --border: rgba(220, 228, 240, 0.09);
+  --border-strong: rgba(220, 228, 240, 0.17);
+  --border-hover: rgba(220, 228, 240, 0.3);
+  --border-focus: #7ea6ff;
+
+  --text: #e6eaf0;
+  --text-muted: #a3acb8;
+  --text-subtle: #828c99;
+
+  --accent: #7ea6ff;
+  --accent-hover: #9ab9ff;
+  --accent-ink: #0b0e12;
+  --accent-text: #7ea6ff;
+  --accent-soft: rgba(126, 166, 255, 0.12);
+  --accent-line: rgba(126, 166, 255, 0.38);
+  --accent-edge: transparent;
+
+  --danger: #f2907f;
+  --danger-soft: rgba(242, 144, 127, 0.1);
+  --danger-line: rgba(242, 144, 127, 0.35);
+  --warning: #e8c66f;
+  --warning-soft: rgba(232, 198, 111, 0.1);
+  --warning-line: rgba(232, 198, 111, 0.32);
+  --info: #a9bdd8;
+  --info-soft: rgba(169, 189, 216, 0.08);
+  --info-line: rgba(169, 189, 216, 0.28);
+
+  --shadow-panel: none;
+  --shadow-pop: 0 16px 40px -16px rgba(2, 4, 8, 0.8), 0 0 0 1px var(--border);
+  --nav-bg: rgba(11, 14, 18, 0.62);
+  --scrim: rgba(4, 6, 9, 0.62);
+  --glow: rgba(126, 166, 255, 0.16);
+  --glow-2: rgba(110, 200, 235, 0.06);
+  --grid-line: rgba(220, 228, 240, 0.055);
+  --panel-tint: rgba(126, 166, 255, 0.05);
+  --field-opacity: 0.55;
+}
+
+/* ===================== Light theme ===================== */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  /* Neutral ivory paper with cool charcoal type */
+  --bg: #f3f3f0;
+  --bg-sunken: #eaeae5;
+  --surface: #fbfbf9;
+  --surface-raised: #fefefc;
+  --surface-hover: #efefeb;
+  --input-bg: #fefefc;
+
+  --border: rgba(21, 24, 29, 0.1);
+  --border-strong: rgba(21, 24, 29, 0.17);
+  --border-hover: rgba(21, 24, 29, 0.32);
+  --border-focus: #2b55d9;
+
+  --text: #15181d;
+  --text-muted: #4a505a;
+  --text-subtle: #626874;
+
+  --accent: #2b55d9;
+  --accent-hover: #2349c2;
+  --accent-ink: #fbfbfe;
+  --accent-text: #2b55d9;
+  --accent-soft: rgba(43, 85, 217, 0.08);
+  --accent-line: rgba(43, 85, 217, 0.3);
+  --accent-edge: transparent;
+
+  --danger: #ad3926;
+  --danger-soft: rgba(173, 57, 38, 0.07);
+  --danger-line: rgba(173, 57, 38, 0.3);
+  --warning: #7f5900;
+  --warning-soft: rgba(196, 140, 10, 0.1);
+  --warning-line: rgba(127, 89, 0, 0.3);
+  --info: #2d5b7c;
+  --info-soft: rgba(45, 91, 124, 0.06);
+  --info-line: rgba(45, 91, 124, 0.26);
+
+  --shadow-panel: 0 1px 2px rgba(21, 24, 29, 0.04), 0 12px 32px -20px rgba(21, 24, 29, 0.2);
+  --shadow-pop: 0 18px 40px -18px rgba(21, 24, 29, 0.3), 0 0 0 1px var(--border);
+  --nav-bg: rgba(243, 243, 240, 0.74);
+  --scrim: rgba(21, 24, 29, 0.28);
+  --glow: rgba(70, 115, 245, 0.15);
+  --glow-2: rgba(110, 180, 235, 0.12);
+  --grid-line: rgba(21, 24, 29, 0.06);
+  --panel-tint: rgba(43, 85, 217, 0.045);
+  --field-opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 0ms;
+    --t-base: 0ms;
+    --t-theme: 0ms;
+  }
+}
