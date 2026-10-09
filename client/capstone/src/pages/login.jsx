@@ -1,7 +1,6 @@
-import React from 'react'
 import {useForm} from 'react-hook-form'
 
-const login = () => {
+const Login = ({ setPage, setUser }) => {
   
     const {register, handleSubmit} = useForm()
   
@@ -41,7 +40,9 @@ const login = () => {
     }
 
     console.log("Authenticated user:", profile.user);
-    alert(`Welcome to CodeInsight, ${profile.user.name}!`);}
+    localStorage.setItem("user", JSON.stringify(profile.user));
+    setUser(profile.user);
+    setPage("dashboard");}
         catch (error) {
           console.log("Login error", error)
           alert(error.message)
@@ -50,20 +51,8 @@ const login = () => {
 
 
   return (
-    <div>
-      <div>
-        <h3>Login Page</h3>
-      </div>
-      <div>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <input {...register ('email', {required: true})} type="email" placeholder='Enter Email'/> <br />
-          <input {...register ('password', {required: true})} type="password" placeholder='Enter Password'/> <br />
-          <button type="submit">Login</button>
-        </form>
-        
-      </div>
-    </div>
+    <main className="auth-page"><button className="auth-logo" onClick={() => setPage('home')}>&lt;/&gt; Code<span>Insight</span></button><div className="auth-card"><section className="auth-intro"><label>WELCOME BACK</label><h1>Pick up where your practice left off.</h1><p>Your roadmap to stronger interview performance is waiting.</p><blockquote>“Consistency beats intensity. Small, deliberate improvements compound into confidence.”</blockquote></section><section className="form-panel"><h2>Log in to your account</h2><p>New to CodeInsight? <button onClick={() => setPage('signup')}>Create an account</button></p><form onSubmit={handleSubmit(submitHandler)}><label>Email address<input {...register ('email', {required: true})} type="email" placeholder="you@example.com"/></label><label>Password<input {...register ('password', {required: true})} type="password" placeholder="Enter your password"/></label><div className="form-row"><label><input type="checkbox"/> Remember me</label><button type="button">Forgot password?</button></div><button className="button primary submit" type="submit">Log in <span className="arrow">→</span></button></form><div className="divider">or continue with</div><button className="social" type="button">● GitHub</button></section></div></main>
   )
 }
 
-export default login
+export default Login

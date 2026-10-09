@@ -1,7 +1,6 @@
-import React from 'react'
 import {useForm} from 'react-hook-form'
 
-const signup = () => {
+const Signup = ({ setPage }) => {
 
   // const {register, handleSubmit} = useForm()
 
@@ -35,7 +34,7 @@ const signup = () => {
       }
 
       console.log('Registration successful:', result);
-      alert('Account created successfully!');
+      setPage('login');
           }
            catch (error) {
       console.log("Signup error", error)
@@ -44,21 +43,8 @@ const signup = () => {
   };
 
   return (
-    <div>
-      <div>
-        <h3>Signup Page</h3>
-      </div>
-      <div>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <input {...register ('name', {required: true})} type="text" placeholder='Enter Name'/> <br />
-          <input {...register ('email', {required: true})} type="email" placeholder='Enter Email'/> <br />
-          <input {...register ('password', {required: true})} type="password" placeholder='Enter Password'/> <br />
-          <button type="submit">Sign Up</button>
-        </form>
-        
-      </div>
-    </div>
+    <main className="auth-page"><button className="auth-logo" onClick={() => setPage('home')}>&lt;/&gt; Code<span>Insight</span></button><div className="auth-card"><section className="auth-intro"><label>START YOUR JOURNEY</label><h1>Make every practice session count.</h1><p>Connect your platforms, find your blind spots, and prepare for interviews with a clearer plan.</p><ul><li>✓ Personalized practice focus</li><li>✓ Progress that makes sense</li><li>✓ Built for coding interviews</li></ul></section><section className="form-panel"><h2>Create your account</h2><p>Already have an account? <button onClick={() => setPage('login')}>Log in</button></p><form onSubmit={handleSubmit(submitHandler)}><label>Full name<input {...register ('name', {required: true})} type="text" placeholder="Your name"/></label><label>Email address<input {...register ('email', {required: true})} type="email" placeholder="you@example.com"/></label><label>Password<input {...register ('password', {required: true})} type="password" placeholder="Create a password"/></label><button className="button primary submit" type="submit">Create account <span className="arrow">→</span></button></form><small className="terms">By creating an account, you agree to our Terms of Service and Privacy Policy.</small></section></div></main>
   )
 }
 
-export default signup
+export default Signup
