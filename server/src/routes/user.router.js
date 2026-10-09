@@ -11,7 +11,7 @@ const authMiddleware = require("../middleware/user.middleware")
 router.post("/auth/register", createUserController);
 
 //read user
-router.get("/auth/login", loginUserController)
+router.post("/auth/login", loginUserController)
 
 //authentication
 router.get("/auth/me", authMiddleware, (req, res) => {

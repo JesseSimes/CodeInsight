@@ -7,6 +7,18 @@ const createUserController = async (req,res) => {
     try {
         const{name, email, password} = req.body
 
+        console.log({
+            hasName: Boolean(name),
+            hasEmail: Boolean(email),
+            hasPassword: Boolean(password)
+        });
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
+            message: "Name, email, and password are required"
+            });
+        }
+
         const hashPassword = await bcrypt.hash(password,10);
 
         const duplicateUser = await User.findOne({email})
